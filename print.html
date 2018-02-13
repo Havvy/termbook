@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <base href="">
+
+        <link rel="stylesheet" href="book.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
+
+    </head>
+    <body class="light">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme;
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            document.querySelector('html').classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="cli/installation.html"><strong aria-hidden="true">2.</strong> Command-Line Tool</a></li><li><ol class="section"><li><a href="cli/build.html"><strong aria-hidden="true">2.1.</strong> build</a></li><li><a href="cli/completions.html"><strong aria-hidden="true">2.2.</strong> completions</a></li></ol></li><li><a href="tags.html"><strong aria-hidden="true">3.</strong> CodeBlock Tags</a></li><li><a href="developers.html"><strong aria-hidden="true">4.</strong> For Developers</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="submenu">
+                                <li><button class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li><button class="theme" id="rust">Rust</button></li>
+                                <li><button class="theme" id="coal">Coal</button></li>
+                                <li><button class="theme" id="navy">Navy</button></li>
+                                <li><button class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                        </div>
+
+                        <h1 class="menu-title"></h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <p><code>termbook</code> is a command-line tool and library designed to make your
+<a href="https://rust-lang-nursery.github.io/mdBook/"><code>mdbook</code> documentation</a> executable.</p>
+<p>Thus you are advised to use the <code>mdbook</code> command-line tool for everything that
+<code>termbook</code> does not support, as it is essentially nothing more than an <code>mdbook</code>
+clone with a custom preprocessor. The latter is not easily supported by <code>mdbook</code>
+just yet.</p>
+<a class="header" href="print.html#features" id="features"><h2>Features</h2></a>
+<p><code>termbook</code> can a few unique things for you</p>
+<ul>
+<li><strong>execute codeblocks</strong>
+<ul>
+<li>This makes your documentation executable, with the output captured in their
+own codeblocks.</li>
+<li>That way your documentation never goes out of sync with reality,
+and allows you to build documentation as part of your test suite.</li>
+</ul>
+</li>
+</ul>
+<a class="header" href="print.html#command-line-tool" id="command-line-tool"><h1>Command-Line Tool</h1></a>
+<p><code>termbook</code> is a minimal clone of the <code>mdbook</code> command-line tool, and will only
+be required to build the final version of your book as it adds the required
+<a href="https://rust-lang-nursery.github.io/mdBook/for_developers/preprocessors.html"><code>mdbook</code> preprocessor</a>.</p>
+<a class="header" href="print.html#installation" id="installation"><h2>Installation</h2></a>
+<p><code>termbook</code> currently can be installed via <code>cargo</code> only, which in turn can be obtained
+via <a href="http://rustup.rs/"><code>rustup</code></a>.</p>
+<p>Then it's as easy as</p>
+<pre><code class="language-bash">cargo install termbook-cli
+</code></pre>
+<p>Now you should be able to run <code>termbook</code>:</p>
+<pre><code class="language-bash exec">termbook --help
+</code></pre>
+<pre><code class="language-output">termbook-cli 1.0.0
+Sebastian Thiel &lt;byronimo@gmail.com&gt;
+`termbook` is a command-line tool to build [`mdbook`'s][mdbook] while executing `bash` codeblocks and collecting their
+output to become part of the `mdbook`
+              
+
+USAGE:
+    termbook [SUBCOMMAND]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    build          Build the `mdbook` compatible book in the current working directory or in the given location.
+    completions    generate completions for supported shell
+    help           Prints this message or the help of the given subcommand(s)
+    playback       
+</code></pre>
+<a class="header" href="print.html#the-build-command" id="the-build-command"><h1>The 'build' command</h1></a>
+<pre><code class="language-bash exec">termbook build --help
+</code></pre>
+<pre><code class="language-output">termbook-build 
+Build the `mdbook` compatible book in the current working directory or in the given location.
+
+USAGE:
+    termbook build [FLAGS] [path-to-mdbook]
+
+FLAGS:
+    -h, --help       Prints help information
+    -r, --rewrite    If set, the 'rewrite' output will be used to render the mdbook in addition to default renderers,
+                     which will write the preprocessor output directly back to the destination directory.It's useful to
+                     review the preprocessor result.
+    -V, --version    Prints version information
+
+ARGS:
+    &lt;path-to-mdbook&gt;    The path to the mdbook to render. If unset, the current working directory is expected to
+                        contain an mdbook configuration file.
+</code></pre>
+<p>Have a look at the next chapter about <em>tags</em>, as they are the bread-and-butter of
+<code>termbook</code>.</p>
+<a class="header" href="print.html#the-completions-command" id="the-completions-command"><h1>The 'completions' command</h1></a>
+<pre><code class="language-bash exec">termbook completions --help
+</code></pre>
+<pre><code class="language-output">termbook-completions 
+generate completions for supported shell
+
+USAGE:
+    termbook completions [shell]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    &lt;shell&gt;    The name of the shell, or the path to the shell as exposed by the $SHELL variable. [default:
+               /bin/bash]
+</code></pre>
+<p>Depending on your shell, the output of this subcommand goes to different spots
+on your disk. Please consult your <code>$SHELL</code>s documentation for more information.</p>
+<a class="header" href="print.html#codeblock-tags" id="codeblock-tags"><h2>CodeBlock Tags</h2></a>
+<p>The special feature <code>termbook build</code> adds to your capability is that it supports
+various tags that can be added to your codeblocks.</p>
+<a class="header" href="print.html#exec" id="exec"><h3>exec</h3></a>
+<p>The <code>exec</code> tag can be applied to any code-block which has a designated type, such
+as <code>bash</code>.
+It will send the contents of the code-block to the program mentioned as type of the
+code-block, and expect it to succeed by default.</p>
+<pre><code class="language-markdown">```bash,exec
+echo 'this is being executed in bash'
+```
+</code></pre>
+<p>By default <code>exec</code> expects the executed program to suceed (with exit-status 0),
+and the entire <code>termbook build</code> invocation will fail otherwise. This behaviour
+is useful to assert your documentation is still matching the program you document.</p>
+<p>You can also indicate the desired exit status, which can be useful if your program
+is expected to fail.</p>
+<pre><code class="language-markdown">```bash,exec=42
+echo 'this should fail with a specific exit code' &amp;&amp; exit 42
+```
+</code></pre>
+<a class="header" href="print.html#prepare-and-use" id="prepare-and-use"><h3>'prepare' and 'use'</h3></a>
+<p>It's useful to be able to use arbitrary snippets that are run prior to your <code>exec</code>
+code-block, which is useful to have shared code which prepares the playing field
+for the code you are about to run.</p>
+<pre><code>```bash,prepare=setup
+function tb() { termbook; };
+```
+</code></pre>
+<p>Now you can <code>use</code> the block in other <code>prepare</code> blocks, or in <code>exec</code> blocks. The
+former is useful for chaining <code>prepare</code> blocks.</p>
+<pre><code>```bash,use=setup,exec
+tb
+```
+</code></pre>
+<p>Here is the complete example as it will show up in your book:</p>
+<pre><code class="language-bash prepare=alias">function tb() { termbook; };
+</code></pre>
+<pre><code class="language-bash use=alias exec=1">tb
+</code></pre>
+<pre><code class="language-output">USAGE:
+    termbook [SUBCOMMAND]
+</code></pre>
+<a class="header" href="print.html#hide" id="hide"><h3>hide</h3></a>
+<p>As you have seen in the previous example, it can be useful to hide certain code-blocks,
+especially those that are used solely for preparation. It's as easy as adding the <code>hide</code>
+tag.</p>
+<pre><code>```bash,hide,prepare=setup
+function tb() { termbook; };
+```
+</code></pre>
+<p>The previous example looks like this, when the <code>prepare</code> block is hidden:</p>
+<pre><code class="language-bash use=alias exec=1">tb
+</code></pre>
+<pre><code class="language-output">USAGE:
+    termbook [SUBCOMMAND]
+</code></pre>
+<p>If <code>hide</code> is used on an <code>exec</code> block, itself and its output are hidden entirely.</p>
+<pre><code>```bash,hide,exec=1
+termbook
+```
+</code></pre>
+<a class="header" href="print.html#for-developers" id="for-developers"><h1>For Developers</h1></a>
+<p><code>termbook-cli</code> provides only the command-line interface for the implementation
+contained in the <code>termbook</code> library.</p>
+<p>You can have a look at the <a href="https://docs.rs/termbook">library documentation</a> for more information.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+
+        <!-- Local fallback for Font Awesome -->
+        <script>
+            if (getComputedStyle(document.querySelector(".fa")).fontFamily !== "FontAwesome") {
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = '_FontAwesome/css/font-awesome.css';
+                document.head.insertBefore(link, document.head.firstChild)
+            }
+        </script>
+
+        
+
+        
+
+        
+
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                window.print();
+            })
+        </script>
+        
+
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
+    </body>
+</html>
